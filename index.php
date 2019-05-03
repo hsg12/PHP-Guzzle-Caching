@@ -1,37 +1,48 @@
 <?php
 
-require_once 'app/guzzle.php';
-require_once 'app/interfaces/CacheInterface.php';
-require_once 'app/classes/Cache.php';
-require_once 'app/classes/CacheService.php';
+use GuzzleHttp\Client;
 
+require 'vendor/autoload.php';
+
+require_once 'app/interfaces/CacheInterface.php';
+require_once 'app/classes/APIClass.php';
+require_once 'app/classes/Cache.php';
+
+
+// Handling exceptions
 function handleUncaughtException($e) {
     echo $e->getMessage();
 }
 set_exception_handler('handleUncaughtException');
 
-$c = new CacheService(new Cache());
 
-// If data from API exists
-if ($json['result']) {
+$service = new APIClass(new Client(), new Cache());
+// $service->setCacheTime('20');
 
-    $jsonIterator = new RecursiveIteratorIterator( 
-        new RecursiveArrayIterator($json['result']), 
-        RecursiveIteratorIterator::SELF_FIRST
-    );
+$method = 'POST';
+$uri = 'https://api.printful.com/shipping/rates';
+$credentials = '77qn9aax-qrrm-idki:lnh0-fm2nhmp0yca7';
+$data = [
+  'json' => [
+    "recipient" => [
+        "address1" => "11025 Westlake Dr",
+        "city" => "Charlotte",
+        "country_code" => "US",
+        "state_code" => "NC",
+        "zip" => 28273
+    ],
+    "items" => [
+        [
+            "quantity" => 2,
+            "variant_id" => 7679
+        ]
+    ]
+  ]
+];
 
-    foreach ($jsonIterator as $key => $val) {
-        if(is_array($val)) {
+$response = $service->getAPIData($method, $uri, $credentials, $data);
 
-          if (null === $c->get($key)) {
-            $c->set($key, $val, 300);
-          }
-        } 
-
-        // in order to check
-        echo "<pre>";
-        print_r($c->get($key));
-        echo "</pre>";
-    }
-
-}
+// to check
+echo '<pre>';
+print_r($response);
+echo '<pre>';

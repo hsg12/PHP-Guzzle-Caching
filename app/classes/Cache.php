@@ -40,8 +40,7 @@ class Cache implements CacheInterface
     if (time() > $exp) {
       return null;
     } else {
-      return $cachedData[$key]; // to check cached with 'expire'
-      // return $cachedData[$key]['data']; // data output
+      return $cachedData[$key];
     }
   }
   
