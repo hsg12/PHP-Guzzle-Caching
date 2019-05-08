@@ -21,7 +21,7 @@ $service = new APIClass(new Client(), new Cache());
 
 $method = 'POST';
 $uri = 'https://api.printful.com/shipping/rates';
-$credentials = '77qn9aax-qrrm-idki:lnh0-fm2nhmp0yca7';
+$credentials = 'password:here';
 $data = [
   'json' => [
     "recipient" => [
